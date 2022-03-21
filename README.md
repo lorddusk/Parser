@@ -2,7 +2,11 @@
 Parser for Crawlers
 
 
-Create .env with 3 variables
+## Run
+run main.py, edit fileList if you want to specificy what you want to parse.
+
+
+## Create .env file with 3 variables:
 
 - DATA_SRC < website where data is stored (Optional, but needs to exist in the .env file)
 
@@ -12,4 +16,7 @@ Create .env with 3 variables
 
 
 
-run main.py, edit fileList if you want to specificy what you want to parse.
+## Create 3 folders in the root of the project:
+- in
+- out
+- logs
