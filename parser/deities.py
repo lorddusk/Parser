@@ -23,7 +23,7 @@ async def run():
     data = parseDeity(data)
     data = deitySrdFilter(data)
     data = fix_dupes(data, SOURCE_HIERARCHY)
-    await dump(data, 'deities.json')
+    await dump(data, 'deities.json', md=True)
     # await dump(srdonly(data), 'srd-deities.json')
     # diff('srd/srd-deities.json')
 

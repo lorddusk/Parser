@@ -6,9 +6,10 @@ from lib import logger
 
 log = logger.logger
 
-fileList = ['backgrounds', 'bestiary', 'classes', 'feats', 'items', 'names', 'races', 'spells', 'psionics',
+fileList = ['backgrounds', 'bestiary', 'bestiaryFluff', 'classes', 'feats', 'items', 'names', 'races', 'spells', 'psionics',
             'conditionsdiseases', 'deities', 'objects', 'trapshazards', 'cultsboons', 'rewards', 'loot']
 
+fileList = ['deities']
 
 async def run():
     open(f'./logs/homebrewTrace.log', 'w').close()

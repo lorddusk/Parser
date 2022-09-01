@@ -33,7 +33,7 @@ SOURCE_HIERARCHY = ('TCE', 'MTF', 'VGM', 'PHB', 'DMG', 'GGR', 'MOT', 'VRGR', 'UA
 
 
 def get_latest_items():
-    return get_data("items.json")['item'] + get_data("magicvariants.json")['variant'] + get_data("items-base.json")['baseitem']
+    return get_data("items.json")['item'] + get_data("magicvariants.json")['magicvariant'] + get_data("items-base.json")['baseitem']
 
 
 def srdfilter(data):

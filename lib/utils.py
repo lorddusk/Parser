@@ -11,6 +11,8 @@ import requests
 from environs import Env
 import cloudscraper
 
+from lib.markdown import spellMarkdown, deityMarkdown
+
 env = Env()
 env.read_env()
 
@@ -25,8 +27,8 @@ logger.setLevel(LOGLEVEL)
 logger.addHandler(handler)
 log = logging.getLogger(__name__)
 
-MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB'))['lookup']  # Server
-# MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB_LOCAL'))['lookup'] # Local
+# MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB'))['lookup']  # Server
+MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB_LOCAL'))['lookup'] # Local
 
 skip = ['class-rune-scribe.json', 'class-sidekick.json', 'class-generic.json']
 
@@ -52,18 +54,21 @@ def get_data(path):
     return dat
 
 
-def get_indexed_data(root, root_key):
-    index = get_json(f'{root}index.json')
+def get_indexed_data(root, root_key, fluff=False):
+    if fluff:
+        index = get_json(f'{root}fluff-index.json')
+    else:
+        index = get_json(f'{root}index.json')
     out = []
     for src, file in index.items():
-        # if file in ["bestiary-mot.json","bestiary-mm.json"]:
+        # if file in ["fluff-bestiary-lmop.json"]:
         if file not in skip:
             if '3pp' in src or 'Stream' in src:
                 log.info(f"Skipped {file}: {src}")
                 continue
             data = get_json(f"{root}{file}")
             out.extend(data[root_key])
-            log.info(f"  Processed {file}: {len(data[root_key])} entries")
+            log.info(f"\tProcessed {file}: {len(data[root_key])} entries")
     return out
 
 
@@ -102,7 +107,7 @@ def get_indexed_datas(root, root_keys):
     return clazz, cfeats, sfeats
 
 
-async def dump(data, filename, MDB=MDB):
+async def dump(data, filename, MDB=MDB, md=False):
     updated = 0
     inserted = 0
     try:
@@ -118,18 +123,29 @@ async def dump(data, filename, MDB=MDB):
     printProgressBar(0, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
     for i, x in enumerate(data):
         actual += 1
-        found = await collection.find_one({"name": x['name']})
-        if found is not None:
-            await collection.replace_one({"name": x['name']}, x)
-            updated = updated + 1
-            if (i % 10) == 0:
-                printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
+        if md:
+            path = f'./markdown/{filename[:-5]}/'
+            if not os.path.exists(path):
+                os.makedirs(path)
+            with open(f"{path}{x['name'].replace('/',' ')}.md", 'w') as f:
+                if filename[:-5] == "spells":
+                    spellMarkdown(x, f)
+                if filename[:-5] == "deities":
+                    deityMarkdown(x, f)
+                if (i % 10) == 0:
+                    printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
         else:
-            await collection.insert_one(x)
-            inserted = inserted + 1
-            if (i % 10) == 0:
-                printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
-
+            found = await collection.find_one({"name": x['name']})
+            if found is not None:
+                await collection.replace_one({"name": x['name']}, x)
+                updated = updated + 1
+                if (i % 10) == 0:
+                    printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
+            else:
+                await collection.insert_one(x)
+                inserted = inserted + 1
+                if (i % 10) == 0:
+                    printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
     printProgressBar(length, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
     print(f"\nInserted: {inserted}")
     print(f"\nUpdated: {updated}")

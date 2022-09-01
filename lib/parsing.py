@@ -185,9 +185,10 @@ PARSING = {'hit': lambda e: f"+{e}",
            'scaledice': lambda e: e.split('|')[-1],
            'book': lambda e: e.split('|')[0],
            'h': lambda e: "Hit: ",
-           'dice': lambda e: e.split('|')[-1]}
+           'dice': lambda e: e.split('|')[-1],
+           'dc': lambda e: f"DC {e}"}
 DEFAULT = ['condition', 'skill', 'action', 'creature', 'item', 'spell', 'damage', 'race', 'background',
-           'class', 'table', 'sense', 'dc']
+           'class', 'table', 'sense']
 IGNORE = ['note', '5etools']
 
 

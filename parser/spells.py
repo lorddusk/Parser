@@ -6,7 +6,7 @@ from lib.utils import dump, get_indexed_data, fix_dupes
 
 log = logging.getLogger("spells")
 
-SOURCE_HIERARCHY = ('TCE', 'MTF', 'VGM', 'PHB', 'DMG', 'GGR', 'MOT', 'UA', 'nil')
+SOURCE_HIERARCHY = ('FTD', 'TCE', 'MTF', 'VGM', 'PHB', 'DMG', 'GGR', 'MOT', 'UA', 'nil')
 
 with open('./srd/srd-spells.txt') as f:
     srd_spells = [s.strip().lower() for s in f.read().split('\n')]
@@ -52,7 +52,7 @@ async def run():
     data = parseSpells(data)
     data = srdfilter(data)
     data = fix_dupes(data, SOURCE_HIERARCHY, True)
-    await dump(data, 'spells.json')
+    await dump(data, 'spells.json', md=True)
 
 
 if __name__ == '__main__':

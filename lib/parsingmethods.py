@@ -154,15 +154,22 @@ def parse_spellcasting(monster):
     usual_sab = (0, 0)  # same thing
     caster_level = 1
     if monster['spellcasting'] is not None:
+        hidden = []
         for cast_type in monster['spellcasting']:
+            if 'hidden' in cast_type:
+                for hide in cast_type['hidden']:
+                    hidden.append(hide)
             if cast_type == "spells":
                 return
-            trait = {'name': cast_type['name'], 'entries': render(cast_type['headerEntries'])}
-            type_dc = re.search(r'\(spell save {@dc (\d+)', '\n'.join(cast_type['headerEntries']))
-            type_sab = re.search(r'{@?hit (\d+)}', '\n'.join(cast_type['headerEntries']))
-            type_caster_level = re.search(r'(\d+)[stndrh]{2}-level', '\n'.join(cast_type['headerEntries']))
+            entries = cast_type['headerEntries'] if cast_type.get('headerEntries') is not None else cast_type['footerEntries']
+            if cast_type.get('footerEntries') is not None:
+                print(f"--------------------------{monster['name']}--------------------------")
+            trait = {'name': cast_type['name'], 'entries': render(entries)}
+            type_dc = re.search(r'\(spell save {@dc (\d+)', '\n'.join(entries))
+            type_sab = re.search(r'{@?hit (\d+)}', '\n'.join(entries))
+            type_caster_level = re.search(r'(\d+)[stndrh]{2}-level', '\n'.join(entries))
             type_spells = []
-            if 'will' in cast_type:
+            if 'will' in cast_type and 'will' not in hidden:
                 spells = []
                 type_spells.extend(extract_spell(s) for s in cast_type['will'])
                 for spell in cast_type['will']:
@@ -171,7 +178,7 @@ def parse_spellcasting(monster):
                 for x in spells:
                     spellString += f" - {x}\n"
                 trait['entries'] += f"\nAt will:\n{spellString}"
-            if 'daily' in cast_type:
+            if 'daily' in cast_type and 'daily' not in hidden:
                 for times_per_day, spells in cast_type['daily'].items():
                     spellList = []
                     each = ' each' if times_per_day.endswith('e') else ''
@@ -183,7 +190,7 @@ def parse_spellcasting(monster):
                     for x in spellList:
                         spellString += f"- {x}\n"
                     trait['entries'] += f"\n{times_per_day}/day{each}:\n{spellString}"
-            if 'spells' in cast_type:
+            if 'spells' in cast_type and 'spells' not in hidden:
                 valid_levels = map(str, range(10))
                 for level, level_data in cast_type['spells'].items():
                     if level not in valid_levels:

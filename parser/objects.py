@@ -29,7 +29,7 @@ def parse(data):
                   "text": render(raw['entries']) if raw.get('entries') is not None else "",
                   "action": raw['actionEntries'] if raw.get('actionEntries') is not None else "",
                   "source": raw['source'],
-                  "page": raw['page']}
+                  "page": raw['page'] if raw.get('page') is not None else ""}
         if object['resist'] == "":
             object.pop('resist', None)
         if object['vulnerable'] == "":
