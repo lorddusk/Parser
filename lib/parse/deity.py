@@ -17,11 +17,13 @@ def parseDeity(data):
         log.info(f"Parsing {raw['name']}...")
         if raw.get('title') is not None and raw.get('symbol') is None:
             deity = {"name": raw['name'],
+                     "altNames": raw.get('altNames', None),
                      "alignment": alignment(raw['alignment'] if raw.get('alignment') is not None else "None"),
                      "title": raw['title'],
                      "pantheon": raw['pantheon'],
                      "domains": domains(raw['domains'] if raw.get('domains') is not None else "None"),
                      "symbol": '?',
+                     "symbolImg": raw.get('symbolImg', '?'),
                      "source": raw['source'],
                      "page": raw.get('page', '?'),
                      "text": render(raw['entries'] if raw.get('entries') is not None else "")
@@ -29,11 +31,13 @@ def parseDeity(data):
             out.append(deity)
         elif raw.get('title') is not None:
             deity = {"name": raw['name'],
+                     "altNames": raw.get('altNames', None),
                      "alignment": alignment(raw['alignment'] if raw.get('alignment') is not None else "None"),
                      "title": raw['title'],
                      "pantheon": raw['pantheon'],
                      "domains": domains(raw['domains'] if raw.get('domains') is not None else "None"),
                      "symbol": raw['symbol'],
+                     "symbolImg": raw.get('symbolImg', '?'),
                      "source": raw['source'],
                      "page": raw.get('page', '?'),
                      "text": render(raw['entries'] if raw.get('entries') is not None else "")
@@ -41,12 +45,14 @@ def parseDeity(data):
             out.append(deity)
         elif raw.get('province') is not None and raw.get('category') is not None:
             deity = {"name": raw['name'],
+                     "altNames": raw.get('altNames', None),
                      "alignment": alignment(raw['alignment'] if raw.get('alignment') is not None else "None"),
                      "province": raw['province'],
                      "category": raw['category'],
                      "pantheon": raw['pantheon'],
                      "domains": domains(raw['domains'] if raw.get('domains') is not None else "None"),
                      "symbol": raw['symbol'] if raw.get('symbol') is not None else "",
+                     "symbolImg": raw.get('symbolImg', '?'),
                      "source": raw['source'],
                      "page": raw.get('page', '?'),
                      "text": render(raw['entries'] if raw.get('entries') is not None else "")
@@ -59,6 +65,7 @@ def parseDeity(data):
                      "pantheon": raw['pantheon'],
                      "domains": domains(raw['domains'] if raw.get('domains') is not None else "None"),
                      "symbol": raw['symbol'],
+                     "symbolImg": raw.get('symbolImg', '?'),
                      "source": raw['source'],
                      "page": raw.get('page', '?'),
                      "text": render(raw['entries'] if raw.get('entries') is not None else "")

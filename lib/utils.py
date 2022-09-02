@@ -28,7 +28,8 @@ logger.addHandler(handler)
 log = logging.getLogger(__name__)
 
 # MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB'))['lookup']  # Server
-MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB_LOCAL'))['lookup'] # Local
+# MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB_LOCAL'))['lookup'] # Local
+MDB = None
 
 skip = ['class-rune-scribe.json', 'class-sidekick.json', 'class-generic.json']
 
@@ -116,7 +117,6 @@ async def dump(data, filename, MDB=MDB, md=False):
         pass
     with open(f'./out/{filename}', 'w') as f:
         json.dump(data, f, indent=2)
-    collection = MDB[f'{filename[:-5]}']
     length = len(data)
     actual = 0
     print("Upserting Data")
@@ -135,6 +135,7 @@ async def dump(data, filename, MDB=MDB, md=False):
                 if (i % 10) == 0:
                     printProgressBar(i + 1, length, prefix='Upserting Data:', suffix=f'Complete ({actual}/{length})', length=50)
         else:
+            collection = MDB[f'{filename[:-5]}']
             found = await collection.find_one({"name": x['name']})
             if found is not None:
                 await collection.replace_one({"name": x['name']}, x)

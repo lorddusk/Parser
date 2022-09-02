@@ -22,16 +22,20 @@ def deityMarkdown(data, file):
     else:
         s = f"#### {data['name']}"
     s += "\n___\n"
+    s += f"\n- **Alignment:** {', '.join(data['alignment'])}"
+    if data.get('altNames', None) is not None:
+        s += f"\n- **Alternate Names:** {', '.join(data['altNames'])}"
+    s += f"\n- **Domains:** {', '.join(data['domains'])}"
     if data.get("category", None) is not None:
         s += f"\n- **Pantheon:** {data['pantheon']} ({data['category']})"
     else:
         s += f"\n- **Pantheon:** {data['pantheon']}"
-    s += f"\n- **Alignment:** {', '.join(data['alignment'])}"
-    s += f"\n- **Domains:** {', '.join(data['domains'])}"
     if data.get('province', None) is not None:
         s += f"\n- **Province:** {data['province']}"
     if data.get('symbol', '?') != "?":
         s += f"\n- **Symbol:** {data['symbol']}"
+    if data.get('symbolImg', '?') != '?':
+        s += f"\n\n![{data['name']}|250](https://5etools-mirror-1.github.io/img/{data.get('symbolImg').get('href').get('path').replace(' ','%20')})"
     s += "\n___\n"
     if data.get('text', '') != '':
         description = data['text'].replace("\n", "\n\n")
