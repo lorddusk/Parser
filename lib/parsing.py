@@ -36,7 +36,7 @@ def render(text, md_breaks=False, join_char='\n', _class=None, subclass=None, op
                     temp += ' - '.join(f"{parse_data_formatting(col)}" for col in row) + '\n'
                 out.append(temp.strip())
 
-            elif 'type' not in entry or entry['type'] in ('entries', 'inset'):
+            elif 'type' not in entry or entry['type'] in ('entries', 'inset', 'insetReadaloud'):
                 if 'entry' in entry:
                     out.append(entry['entry'])
                 else:
