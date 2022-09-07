@@ -3,7 +3,6 @@ import re
 import math
 from collections import defaultdict
 
-
 skillStats = {'acrobatics': 'dex', 'animalHandling': 'wis', 'arcana': 'int', 'athletics': 'str', 'deception': 'cha',
               'history': 'int', 'insight': 'wis', 'intimidation': 'cha', 'investigation': 'int', 'medicine': 'wis',
               'nature': 'int', 'perception': 'wis', 'performance': 'cha', 'persuasion': 'cha', 'religion': 'int',
@@ -88,6 +87,8 @@ def checkCopyMeta(data_str, key, mods):
                         data_str = appendArr(data_str, mods, key)
                     elif mods['mode'] == 'addSpells':
                         data_str = addSpells(data_str, mods)
+                    elif mods['mode'] == 'removeSpells':
+                        data_str = removeSpells(data_str, mods)
                     elif mods['mode'] == 'replaceSpells':
                         data_str = replaceSpells(data_str, mods)
                     elif mods['mode'] == 'replaceOrAppendArr':
@@ -149,7 +150,7 @@ def getProf(data):
     return math.ceil(int(cr) / 4) + 1
 
 
-def change(data_str, mods, _type, stat = None):
+def change(data_str, mods, _type, stat=None):
     data = json.loads(data_str)
 
     if _type == "size":
@@ -195,6 +196,36 @@ def addSpells(data_str, mod):
                                 dd[key][0].extend(valueD)
                             else:
                                 dd[key].append(valueD)
+                    else:
+                        d += value
+
+    data_str = json.dumps(data)
+    return data_str
+
+
+def removeSpells(data_str, mod):
+    data = json.loads(data_str)
+
+    sp = data['spellcasting'][0]
+    dd = defaultdict(list)
+
+    if mod.get('spells', None) is not None:
+        for d in (sp['spells'], mod['spells']):
+            for key, value in d.items():
+                if len(dd[key]) > 0:
+                    dd[key][0]['spells'].remove([value][0]['spells'])
+                else:
+                    dd[key].pop(value)
+    else:
+        for key, value in mod.items():
+            if key != "mode":
+                for d in (sp[key], value):
+                    if isinstance(d, dict):
+                        for keyD, valueD in d.items():
+                            if len(dd[key]) > 0:
+                                dd[key][0].remove(valueD)
+                            else:
+                                dd[key].pop(valueD)
                     else:
                         d += value
 

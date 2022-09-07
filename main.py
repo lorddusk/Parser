@@ -9,7 +9,7 @@ log = logger.logger
 fileList = ['backgrounds', 'bestiary', 'bestiaryFluff', 'classes', 'feats', 'items', 'names', 'races', 'spells', 'psionics',
             'conditionsdiseases', 'deities', 'objects', 'trapshazards', 'cultsboons', 'rewards', 'loot']
 
-fileList = ['deities']
+# fileList = ['items']
 
 async def run():
     open(f'./logs/homebrewTrace.log', 'w').close()
@@ -30,4 +30,4 @@ if __name__ == '__main__':
     loop.run_until_complete(run())
     loop.close()
     elapsed = time.perf_counter() - s
-    print(f"{__file__} executed in {elapsed:0.2f} seconds.")
+    log.info(f"{__file__} executed in {elapsed:0.2f} seconds.")

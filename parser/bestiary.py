@@ -36,7 +36,7 @@ def parse_copies(data):
 
         copymeta = monster['_copy']
         if monster['name'] is not None:
-            log.info(f"Copying {copymeta['name']} onto {monster['name']}...")
+            log.info(f"Copying {copymeta['name']} onto {monster['name']} ({monster['source']})...")
             to_copy = next(m for m in data if m['source'].lower() == copymeta['source'].lower() and m['name'].lower() == copymeta['name'].lower())
 
             data_str = json.dumps(to_copy)
@@ -52,8 +52,9 @@ def parse_copies(data):
                     for key, mods in to_copy_trait.get('_root', []).items():
                         data_str = checkCopyMeta(data_str, key, mods)
 
-                for key, mods in to_copy_trait.get('_mod', []).items():
-                    data_str = checkCopyMeta(data_str, key, mods)
+                if to_copy_trait.get('_mod', None) is not None:
+                    for key, mods in to_copy_trait.get('_mod', []).items():
+                        data_str = checkCopyMeta(data_str, key, mods)
 
                 data_str = regexParsing(data_str, meta, monster['name'])
 
@@ -102,4 +103,4 @@ if __name__ == '__main__':
     loop.run_until_complete(run())
     loop.close()
     elapsed = time.perf_counter() - s
-    print(f"{__file__} executed in {elapsed:0.2f} seconds.")
+    log.info(f"{__file__} executed in {elapsed:0.2f} seconds.")

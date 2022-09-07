@@ -175,27 +175,35 @@ def SRC_FORMAT(e):
 ATK_TYPES = {'mw': "Melee Weapon", 'rw': "Ranged Weapon", 'mw,rw': "Melee or Ranged Weapon",
              'ms': "Melee Spell", 'rs': "Ranged Spell", 'ms,rs': "Melee or Ranged Spell"}
 FORMATTING = {'bold': '**', 'italic': '*', 'b': '**', 'i': '*'}
-PARSING = {'hit': lambda e: f"+{e}",
-           'filter': lambda e: e.split('|')[0],
-           'link': lambda e: f"[{e.split('|')[0]}]({e.split('|')[1]})",
-           'adventure': lambda e: e.split('|')[0],
-           'recharge': lambda e: f"(Recharge {e}-6)" if e else "(Recharge 6)",
-           'chance': lambda e: e.split('|')[1] if len(e.split('|')) > 1 else f"{e.split('|')[0]}%",
-           'atk': lambda e: f"{ATK_TYPES.get(e, 'Unknown')} Attack:",
-           'scaledice': lambda e: e.split('|')[-1],
-           'scaledamage': lambda e: e.split('|')[-1],
-           'book': lambda e: e.split('|')[0],
-           'feat': lambda e: e.split('|')[0],
-           'h': lambda e: "Hit: ",
-           'dice': lambda e: e.split('|')[-1],
-           'dc': lambda e: f"DC {e}",
-           'd20': lambda e: f"+{e}",
-           'language': lambda e: f"{e}",
-           'classFeature': lambda e: e.split('|')[0],
-           'quickref': lambda e: e.split('|')[0]}
+PARSING = {
+    'adventure': lambda e: e.split('|')[0],
+    'atk': lambda e: f"{ATK_TYPES.get(e, 'Unknown')} Attack:",
+    'book': lambda e: e.split('|')[0],
+    'chance': lambda e: e.split('|')[1] if len(e.split('|')) > 1 else f"{e.split('|')[0]}%",
+    'classFeature': lambda e: e.split('|')[0],
+    'd20': lambda e: f"+{e}",
+    'dc': lambda e: f"DC {e}",
+    'deity': lambda e: e.split('|')[0],
+    'dice': lambda e: e.split('|')[-1],
+    'disease': lambda e: e.split('|')[0],
+    'feat': lambda e: e.split('|')[0],
+    'filter': lambda e: e.split('|')[0],
+    'h': lambda e: "Hit: ",
+    'hazard': lambda e: e.split('|')[0],
+    'hit': lambda e: f"+{e}",
+    'language': lambda e: f"{e}",
+    'link': lambda e: f"[{e.split('|')[0]}]({e.split('|')[1]})",
+    'quickref': lambda e: e.split('|')[0],
+    'recharge': lambda e: f"(Recharge {e}-6)" if e else "(Recharge 6)",
+    'scaledamage': lambda e: e.split('|')[-1],
+    'scaledice': lambda e: e.split('|')[-1],
+    'variantrule': lambda e: e.split('|')[0],
+    'optfeature': lambda e: e.split('|')[0],
+    'hitYourSpellAttack': lambda e: f"your spell attack modifier"
+}
 DEFAULT = ['condition', 'skill', 'action', 'creature', 'item', 'spell', 'damage', 'race', 'background',
            'class', 'table', 'sense']
-IGNORE = ['note', '5etools']
+IGNORE = ['note', '5etools', 'area']
 
 
 def parse_data_formatting(text):
@@ -371,7 +379,7 @@ def calculate_col_widths_before_split(table: list[list[str]], col_styles: list[t
     # While there is still space to allocate AND not all columns have been given their ideal widths,
     #  we allocate a single character of space to the column that needs it the most.
     # TODO: Pretty sure this is equivalent to a voting theory problem, maybe check that out?
-    while sum(actual_widths) + num_cols - 1 < TABLE_MAX_WIDTH and\
+    while sum(actual_widths) + num_cols - 1 < TABLE_MAX_WIDTH and \
             any(ideal > actual for ideal, actual in zip(ideal_widths, actual_widths)):
         # Find the column that needs extra space the most
         min_width_idx = min(range(num_cols), key=dist_key)

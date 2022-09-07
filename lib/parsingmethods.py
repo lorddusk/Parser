@@ -162,8 +162,6 @@ def parse_spellcasting(monster):
             if cast_type == "spells":
                 return
             entries = cast_type['headerEntries'] if cast_type.get('headerEntries') is not None else cast_type['footerEntries']
-            if cast_type.get('footerEntries') is not None:
-                print(f"--------------------------{monster['name']}--------------------------")
             trait = {'name': cast_type['name'], 'entries': render(entries)}
             type_dc = re.search(r'\(spell save {@dc (\d+)', '\n'.join(entries))
             type_sab = re.search(r'{@?hit (\d+)}', '\n'.join(entries))
@@ -226,8 +224,6 @@ def parseAtWillOrDailySpells(spell, spells, name = ""):
                 spells.append(render(spell['entry']))
     else:
         spells.append(render(spell, name=name))
-        if name == "Korred":
-            print(f"KORRED - POST PARSE CURRENT SPELLS: {spells}")
     return spells
 
 

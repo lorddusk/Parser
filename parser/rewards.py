@@ -37,4 +37,4 @@ if __name__ == '__main__':
     loop.run_until_complete(run())
     loop.close()
     elapsed = time.perf_counter() - s
-    print(f"{__file__} executed in {elapsed:0.2f} seconds.")
+    log.info(f"{__file__} executed in {elapsed:0.2f} seconds.")
