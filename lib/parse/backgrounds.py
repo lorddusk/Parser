@@ -75,7 +75,7 @@ def parse_traits(raw):
                             'text': render(item.get('entry') or item.get('entries'))
                         }
                         traits.append(trait)
-                elif entry['type'] in ('entries', 'section'):
+                elif entry['type'] in ('entries', 'section', 'inset'):
                     trait = {
                         'name': entry.get('name', ''),
                         'text': render(entry['entries'])
