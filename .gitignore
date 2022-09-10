@@ -114,4 +114,5 @@ cache/
 logs/
 /in/homebrew/
 
-in/
+/in/
+markdown/
