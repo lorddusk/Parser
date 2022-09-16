@@ -1,6 +1,10 @@
+from pathlib import Path
+import sys
+path_root = Path(__file__).parents[1]
+sys.path.append(str(path_root))
+
 import asyncio
 import logging
-from pprint import pprint
 
 from lib.parse.clazz import *
 from lib.parsing import recursive_tag, render

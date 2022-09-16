@@ -15,7 +15,7 @@ async def run():
     open(f'./logs/homebrewTrace.log', 'w').close()
     open(f'./logs/HPFN.log', 'w').close()
     for file in fileList:
-        with Popen(f"python ./parser/{file}.py", stdout=PIPE, stderr=STDOUT, bufsize=1, shell=True) as p, \
+        with Popen(f"python3.9 ./parser/{file}.py", stdout=PIPE, stderr=STDOUT, bufsize=1, shell=True) as p, \
                 open(f'./logs/{file}.log', 'wb') as file:
             for line in p.stdout:  # b'\n'-separated lines
                 sys.stdout.buffer.write(line)  # pass bytes as is
