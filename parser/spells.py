@@ -52,7 +52,7 @@ async def run():
     data = parseSpells(data)
     data = srdfilter(data)
     data = fix_dupes(data, SOURCE_HIERARCHY, True)
-    await dump(data, 'spells.json', md=True)
+    await dump(data, 'spells.json', md=False)
 
 
 if __name__ == '__main__':

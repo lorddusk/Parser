@@ -27,9 +27,9 @@ logger.setLevel(LOGLEVEL)
 logger.addHandler(handler)
 log = logging.getLogger(__name__)
 
-# MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB'))['lookup']  # Server
+MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB'))['lookup']  # Server
 # MDB = motor.motor_asyncio.AsyncIOMotorClient(env('MONGODB_LOCAL'))['lookup'] # Local
-MDB = None
+# MDB = None
 
 skip = ['class-rune-scribe.json', 'class-sidekick.json', 'class-generic.json']
 
