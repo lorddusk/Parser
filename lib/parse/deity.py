@@ -1,10 +1,8 @@
-import asyncio
 import json
 import logging
 
-from lib.copy import checkCopyMeta
+from lib.copy.copy import checkCopyMeta
 from lib.parsing import render
-from lib.utils import dump, get_data, fix_dupes
 
 log = logging.getLogger("deities")
 

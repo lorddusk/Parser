@@ -4,12 +4,9 @@ path_root = Path(__file__).parents[1]
 sys.path.append(str(path_root))
 
 import asyncio
-import json
 import logging
 
-from lib.copy import checkCopyMeta
 from lib.parse.deity import parseDeity, deitySrdFilter, parseDeityCopies
-from lib.parsing import render
 from lib.utils import dump, get_data, fix_dupes
 
 log = logging.getLogger("deities")

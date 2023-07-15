@@ -5,7 +5,7 @@ sys.path.append(str(path_root))
 
 import asyncio
 
-from lib.copy import checkCopyMeta, regexParsing
+from lib.copy.copy import checkCopyMeta, regexParsing
 from lib.parsing import recursive_tag
 from lib.parsingmethods import parse_ac, translate_skills, monster_render, parse_attacks
 from lib.utils import *

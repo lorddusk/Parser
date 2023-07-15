@@ -4,11 +4,9 @@ path_root = Path(__file__).parents[1]
 sys.path.append(str(path_root))
 
 import asyncio
-import pprint
 
-from lib.copy import checkCopyMeta, regexParsing
-from lib.parsing import recursive_tag, render
-from lib.parsingmethods import parse_ac, translate_skills, monster_render, parse_attacks
+from lib.copy.copy import checkCopyMeta
+from lib.parsing import recursive_tag
 from lib.utils import *
 
 log = logging.getLogger("bestiaryFluff")

@@ -3,6 +3,8 @@ import re
 import math
 from collections import defaultdict
 
+from lib.copy.regex import return_first_match
+
 skillStats = {'acrobatics': 'dex', 'animalHandling': 'wis', 'arcana': 'int', 'athletics': 'str', 'deception': 'cha',
               'history': 'int', 'insight': 'wis', 'intimidation': 'cha', 'investigation': 'int', 'medicine': 'wis',
               'nature': 'int', 'perception': 'wis', 'performance': 'cha', 'persuasion': 'cha', 'religion': 'int',
@@ -17,25 +19,59 @@ def regexParsing(data_str, meta, monsterName):
     pattern = re.compile("<\\$short_name\\$>", re.IGNORECASE)
     data_str = pattern.sub(meta['name'], data_str)
 
-    pattern = re.compile("<\\$spell_dc__cha\\$>", re.IGNORECASE)
-    dc = 8 + getProf(data) + getMod(data[f'cha'])
-    data_str = pattern.sub(str(dc), data_str)
+    pattern = re.compile("<\\$title_short_name\\$>", re.IGNORECASE)
+    data_str = pattern.sub(monsterName.title(), data_str)
 
-    pattern = re.compile("<\\$damage_mod__str\\$>", re.IGNORECASE)
-    mod = getMod(data[f'str'])
+    for stat in ['str', 'dex', 'wis', 'con', 'cha', 'int']:
+        data_str = regex_parsing_spell_dc(stat, data, data_str)
+        data_str = regex_parsing_damage_mod(stat, data, data_str)
+        data_str = regex_parsing_damage_avg(stat, data, data_str)
+        data_str = regex_parsing_to_hit(stat, data, data_str)
+
+    return data_str
+
+
+def regex_parsing_to_hit(stat, data, data_str):
+    pattern = re.compile(rf"<\$to_hit__{stat}\$>", re.IGNORECASE)
+    toHit = getProf(data) + getMod(data[f'{stat}'])
+    data_str = pattern.sub(str(toHit), data_str)
+    return data_str
+
+
+def regex_parsing_damage_avg(stat, data, data_str):
+    pattern = re.compile(rf"<\$damage_avg__(.*)\+{stat}\$>", re.IGNORECASE)
+    look = re.search(pattern, data_str)
+    if look is None:
+        return data_str
+    avg = return_first_match(data_str, pattern)
+    pattern2 = re.compile(r"(\d*\.)?\d+", re.IGNORECASE)
+    number = return_first_match(avg, pattern2)
+    dmg = math.floor(float(number) + getMod(data[f'{stat}']))
+    data_str = pattern.sub(str(dmg), data_str)
+    return data_str
+
+
+def regex_parsing_damage_mod(stat, data, data_str):
+    pattern = re.compile(rf"<\$damage_mod__{stat}\$>", re.IGNORECASE)
+    mod = getMod(data[f'{stat}'])
     if mod > 0:
         data_str = pattern.sub(f" + {mod}", data_str)
     else:
         data_str = pattern.sub("", data_str)
+    return data_str
 
-    pattern = re.compile("<\\$damage_avg__2.5+str\\$>", re.IGNORECASE)
-    dmg = math.floor(2.5 + getMod(data[f'str']))
-    data_str = pattern.sub(str(dmg), data_str)
 
-    pattern = re.compile("<\\$to_hit__str\\$>", re.IGNORECASE)
-    toHit = getProf(data) + getMod(data[f'str'])
-    data_str = pattern.sub(str(toHit), data_str)
+def regex_parsing_spell_dc(stat, data, data_str):
+    pattern = re.compile(rf"<\$spell_dc__{stat}\$>", re.IGNORECASE)
+    dc = 8 + getProf(data) + getMod(data[f'{stat}'])
+    data_str = pattern.sub(str(dc), data_str)
+    return data_str
 
+
+def regex_parsing_dc(stat, data, data_str):
+    pattern = re.compile(rf"<\$dc__{stat}\$>", re.IGNORECASE)
+    dc = 8 + getProf(data) + getMod(data[f'{stat}'])
+    data_str = pattern.sub(str(dc), data_str)
     return data_str
 
 

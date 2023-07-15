@@ -284,9 +284,12 @@ def parse_attacks(data):
                             continue
 
                         try:
-                            raw = entry['text']
-                        except KeyError:
-                            raw = entry['entries'][0]
+                            try:
+                                raw = entry['text']
+                            except KeyError:
+                                raw = entry['entries'][0]
+                        except Exception:
+                            log.error("ERROR IN TEXT ENTRY:", entry)
 
                         if isinstance(raw,dict):
                             continue

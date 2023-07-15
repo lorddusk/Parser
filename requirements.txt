@@ -17,6 +17,6 @@ requests==2.20.0
 urllib3==1.24.2
 python-dateutil
 cachetools==2.1.0
-motor==2.3.0
+motor==3.2.0
 newrelic
 cloudscraper

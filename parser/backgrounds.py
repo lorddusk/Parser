@@ -7,7 +7,7 @@ import asyncio
 import json
 import logging
 
-from lib.copy import checkCopyMeta
+from lib.copy.copy import checkCopyMeta
 from lib.parse.backgrounds import parseBackgrounds, srdfilter
 from lib.utils import dump, get_data, fix_dupes
 

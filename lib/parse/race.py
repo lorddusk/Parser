@@ -2,7 +2,7 @@ import logging
 import copy
 import json
 
-from lib.copy import checkCopyMeta
+from lib.copy.copy import checkCopyMeta
 
 log = logging.getLogger("races")
 

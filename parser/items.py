@@ -8,11 +8,9 @@ import copy
 import fnmatch
 import json
 import logging
-import re
 
-from lib.copy import checkCopyMeta
-from lib.parsing import recursive_tag, render
-from lib.utils import diff, dump, get_data, srdonly, fix_dupes
+from lib.copy.copy import checkCopyMeta
+from lib.utils import dump, get_data, fix_dupes
 import lib.parsingmethods as pm
 
 
