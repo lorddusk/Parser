@@ -31,7 +31,7 @@ def get_bestiaries_from_web():
 
 
 def parse_copies(data):
-    trait = get_json(f'bestiary/traits.json')['trait']
+    monsterTemplate = get_json(f'bestiary/template.json')['monsterTemplate']
 
     for i, monster in enumerate(data):
         if '_copy' not in monster:
@@ -51,7 +51,7 @@ def parse_copies(data):
 
             if copymeta.get('_trait', None) is not None:
                 meta = copymeta.get('_trait', [])
-                to_copy_trait = next(m for m in trait if m['source'].lower() == meta['source'].lower() and m['name'].lower() == meta['name'].lower())
+                to_copy_trait = next(m for m in monsterTemplate if m['source'].lower() == meta['source'].lower() and m['name'].lower() == meta['name'].lower())
                 to_copy_trait = to_copy_trait.get('apply', [])
                 if to_copy_trait.get('_root', None) is not None:
                     for key, mods in to_copy_trait.get('_root', []).items():

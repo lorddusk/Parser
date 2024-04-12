@@ -102,8 +102,13 @@ def checkCopyMeta(data_str, key, mods):
                 elif isinstance(mods, dict):
                     if key == "*":
                         if mods['mode'] == 'replaceTxt':
+                            regexDict = json.loads(data_str)
                             pattern = re.compile(mods['replace'], re.IGNORECASE)
-                            data_str = pattern.sub(mods['with'], data_str)
+                            for key, value in regexDict.items():
+                                if type(value) == str:
+                                    newValue = pattern.sub(mods['with'], json.dumps(value)).replace("\"", "")
+                                    regexDict[key] = newValue
+                            data_str = json.dumps(regexDict)
                     elif key == "_":
                         if mods['mode'] == 'addSkills':
                             data_str = addSkills(data_str, mods)
@@ -325,11 +330,23 @@ def replaceArr(data_str, mods, key):
     if isinstance(mods['items'], list):
         if len(mods['items']) > 1:
             for i in range(0, len(mods['items'])):
-                currActions.insert(i, {'name': mods['items'][i]['name'], 'entries': mods['items'][i]['entries']})
-                for x in range(len(currActions)):
-                    if currActions[x]['name'] == toReplace:
-                        del currActions[x]
-                        break
+                if 'items' in mods['items'][i]:
+                    item = mods['items'][i]['items'][0]
+                    currActions.insert(i, {'name': item['name'], 'entries': item['entries']})
+                    for x in range(len(currActions)):
+                        if 'name' in currActions[x]:
+                            if currActions[x]['name'] == toReplace:
+                                del currActions[x]
+                                break
+                else:
+                    try:
+                        currActions.insert(i, {'name': mods['items'][i]['name'], 'entries': mods['items'][i]['entries']})
+                        for x in range(len(currActions)):
+                            if currActions[x]['name'] == toReplace:
+                                del currActions[x]
+                                break
+                    except TypeError:
+                        pass
     else:
         for x in currActions:
             try:

@@ -9,8 +9,6 @@ log = logger.logger
 fileList = ['backgrounds', 'bestiary', 'bestiaryFluff', 'classes', 'feats', 'items', 'names', 'races', 'spells', 'psionics',
             'conditionsdiseases', 'deities', 'objects', 'trapshazards', 'cultsboons', 'rewards', 'loot']
 
-fileList = ['bestiary']
-
 async def run():
     open(f'./logs/homebrewTrace.log', 'w').close()
     open(f'./logs/HPFN.log', 'w').close()

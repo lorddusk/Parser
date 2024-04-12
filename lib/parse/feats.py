@@ -22,10 +22,13 @@ def parse_prereq(feat):
             if 'spellcasting' in entry:
                 prereq.append("The ability to cast at least one spell")
             if 'proficiency' in entry:
-                try:
-                    prereq.append(f"Proficiency with {entry['proficiency'][0]['armor']} armor")
-                except KeyError:
-                    prereq.append(f"Proficiency with {entry['proficiency'][0]['weapon']} weapons")
+                for prof in entry['proficiency']:
+                    if 'armor' in prof:
+                        prereq.append(f"Proficiency with {prof['armor']} armor")
+                    if 'weapon' in prof:
+                        prereq.append(f"Proficiency with {prof['weapon']} weapons")
+                    if 'weaponGroup' in prof:
+                        prereq.append(f"Proficiency with {prof['weaponGroup']} weapons")
             if 'level' in entry:
                 print(entry)
                 prereq.append(f"Level {entry['level']}")

@@ -24,7 +24,7 @@ def parse(data):
     for raw in data:
         log.info(f"Parsing {raw['name']}...")
         object = {"name": raw['name'],
-                  "size": SIZES.get(raw.get('size')),
+                  "size": parse_size(raw.get('size')),
                   "type": TYPES.get(raw.get('type')),
                   "ac": raw['ac'],
                   "hp": raw['hp'],
@@ -43,6 +43,12 @@ def parse(data):
             object.pop('action', None)
         out.append(object)
     return out
+
+def parse_size(data):
+    size = []
+    for raw in data:
+        size.append(SIZES.get(raw))
+    return size
 
 
 def parse_attacks(data):

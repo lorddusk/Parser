@@ -96,21 +96,22 @@ def prerender(data):
 def parse_ac(data):
     for monster in data:
         log.info(f"Parsing {monster['name']} AC")
-        if isinstance(monster['ac'], dict):
-            if monster['ac'].get('special', None) is not None:
-                monster['ac'] = {'ac': monster['ac'].get('special')}
+        if "ac" in monster:
+            if isinstance(monster['ac'], dict):
+                if monster['ac'].get('special', None) is not None:
+                    monster['ac'] = {'ac': monster['ac'].get('special')}
+                else:
+                    monster['ac'] = {'ac': int(monster['ac']['ac']), 'armortype': render(monster['ac'].get('from', []), join_char=', ')}
+            elif isinstance(monster['ac'][0], int):
+                monster['ac'] = {'ac': int(monster['ac'][0])}
+            elif isinstance(monster['ac'][0], dict):
+                if monster['ac'][0].get('special', None) is not None:
+                    monster['ac'] = {'ac': monster['ac'][0].get('special')}
+                else:
+                    monster['ac'] = {'ac': int(monster['ac'][0]['ac']), 'armortype': render(monster['ac'][0].get('from', []), join_char=', ')}
             else:
-                monster['ac'] = {'ac': int(monster['ac']['ac']), 'armortype': render(monster['ac'].get('from', []), join_char=', ')}
-        elif isinstance(monster['ac'][0], int):
-            monster['ac'] = {'ac': int(monster['ac'][0])}
-        elif isinstance(monster['ac'][0], dict):
-            if monster['ac'][0].get('special', None) is not None:
-                monster['ac'] = {'ac': monster['ac'][0].get('special')}
-            else:
-                monster['ac'] = {'ac': int(monster['ac'][0]['ac']), 'armortype': render(monster['ac'][0].get('from', []), join_char=', ')}
-        else:
-            log.warning(f"Unknown AC type: {monster['ac']}")
-            raise Exception
+                log.warning(f"Unknown AC type: {monster['ac']}")
+                raise Exception
     return data
 
 
